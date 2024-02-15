@@ -1,5 +1,5 @@
-#include <string>
 #include <iostream>
+#include <string>
 #include <map>
 #include <cstdint>
 
@@ -10,31 +10,31 @@ class MemoryMapper {
         string ins;
         uint8_t val;
     };
-    map<int, data> memory;
+    map<uint16_t, data> memory;
 
-    public:
-        void writeIns(int address, string ins) {
+    public: 
+        void writeIns(uint16_t address, string ins) {
             data d;
             d.ins = ins;
             memory[address] = d;
         }
-        void writeVal(int address, uint8_t val) {
+        void writeVal(uint16_t address, uint8_t val) {
             data d;
             d.val = val;
             memory[address] = d;
         }
-        string readIns(int address) {
+        string readIns(uint16_t address) {
             return memory[address].ins;
         }
-        uint8_t readVal(int address) {
+        uint8_t readVal(uint16_t address) {
             return memory[address].val;
         }
         void display() {
             for(auto i:memory) {
                 if(i.second.ins!="")
-                    cout<<i.first<<" "<<i.second.ins<<endl;
+                    cout<< hex << i.first<<" "<< i.second.ins<<endl;
                 else if(i.second.val!=0)
-                    cout<<i.first<<" "<<i.second.val<<endl;
+                    cout<< hex << i.first<<" "<< hex << unsigned(i.second.val)<<endl;
             }
         }
 };
@@ -42,7 +42,7 @@ class MemoryMapper {
 class Processor {
     public:
         uint8_t A,B,C,D,E,H,L;
-        uint8_t SP,PC;
+        uint16_t SP,PC;
         bool flag[8];
         MemoryMapper memory;
         Processor() {
@@ -78,6 +78,4 @@ class Processor {
         }
 };
 
-int main() {
-    Processor p;
-}
+Processor processor;
