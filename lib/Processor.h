@@ -69,8 +69,8 @@ class Processor {
             cout<<"E: "<< hex << unsigned(E)<<endl;
             cout<<"H: "<< hex << unsigned(H)<<endl;
             cout<<"L: "<< hex << unsigned(L)<<endl;
-            cout<<"SP: "<< hex << unsigned(PC)<<endl;
-            cout<<"PC: "<< hex << unsigned(SP)<<endl;
+            cout<<"SP: "<< hex << unsigned(SP)<<endl;
+            cout<<"PC: "<< hex << unsigned(PC)<<endl;
             cout<<"Flags: ";
             for(int i=0;i<8;i++)
                 cout<<flag[i]<<" ";
