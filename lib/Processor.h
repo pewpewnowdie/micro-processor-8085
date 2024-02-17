@@ -10,9 +10,9 @@ class MemoryMapper {
         string ins;
         uint8_t val;
     };
-    map<uint16_t, data> memory;
 
-    public: 
+    public:
+        map<uint16_t, data> memory;
         void writeIns(uint16_t address, string ins) {
             data d;
             d.ins = ins;
@@ -33,7 +33,7 @@ class MemoryMapper {
             for(auto i:memory) {
                 if(i.second.ins!="")
                     cout<< hex << i.first<<" "<< i.second.ins<<endl;
-                else if(i.second.val!=0)
+                else
                     cout<< hex << i.first<<" "<< hex << unsigned(i.second.val)<<endl;
             }
         }
@@ -72,8 +72,12 @@ class Processor {
             cout<<"SP: "<< hex << unsigned(SP)<<endl;
             cout<<"PC: "<< hex << unsigned(PC)<<endl;
             cout<<"Flags: ";
-            for(int i=0;i<8;i++)
-                cout<<flag[i]<<" ";
+            for(int i=7;i>=0;i--) {
+                if (i==2 || i==4 || i==6)
+                    cout << "-" << " ";
+                else
+                    cout<<flag[i]<<" ";
+            }
             cout<<endl;
         }
 };

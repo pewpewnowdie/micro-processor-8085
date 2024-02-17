@@ -12,6 +12,13 @@ class Reader : public Processor{
             string opcode;
             vector<string> operands;
         };
+        string regPair(string reg) {
+            string pair;
+            if(reg ==  "B") return "C";
+            if(reg == "D") return "E";
+            if(reg == "H") return "L";
+            return "";
+        }
         uint8_t hexToDec8(string hexVal) 
         { 
             int len = hexVal.size(); 
@@ -65,6 +72,7 @@ class Reader : public Processor{
             return result;
         }
         bool isReg(const string& operand) {
+            if(operand == "SP") return true;
             if(operand.size() != 1)
                 return false;
             if(operand[0] == 'A' || operand[0] == 'B' || operand[0] == 'C' || operand[0] == 'D' || operand[0] == 'E' || operand[0] == 'H' || operand[0] == 'L' || operand[0] == 'M') 

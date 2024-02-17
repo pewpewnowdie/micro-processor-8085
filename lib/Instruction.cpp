@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "Reader.h"
+#include <map>
 
 using namespace std;
 
@@ -155,6 +156,73 @@ void MVI(string dest, uint8_t val) {
     }
 }
 
+void LDAX(string reg) {
+    if (!(reg == "B" || reg == "D")) {
+        processor.PC += 1;
+        return;
+    }
+    uint16_t address;
+    if (reg == "B") {
+        address = (processor.B << 8) | processor.C;
+        processor.A = processor.memory.readVal(address);
+        return;
+    }
+    if (reg == "D") {
+        address = (processor.D << 8) | processor.E;
+        processor.A = processor.memory.readVal(address);
+        return;
+    }
+}
+
+void STAX(string reg) {
+    if (!(reg == "B" || reg == "D")) {
+        processor.PC += 1;
+        return;
+    }
+    uint16_t address;
+    if (reg == "B") {
+        address = (processor.B << 8) | processor.C;
+        processor.memory.writeVal(address, processor.A);
+        return;
+    }
+    if (reg == "D") {
+        address = (processor.D << 8) | processor.E;
+        processor.memory.writeVal(address, processor.A);
+        return;
+    }
+}
+
+void LXI(string reg, uint16_t data) {
+    if (!(reg == "B" || reg == "D" || reg == "H" || reg == "SP")) {
+        processor.PC += 3;
+        return;
+    }
+    if (reg == "B") {
+        processor.B = data / (16*16);
+        processor.C = data % (16*16);
+        return;
+    }
+    if (reg == "D") {
+        processor.D = data / (16*16);
+        processor.E = data % (16*16);
+        return;
+    }
+    if (reg == "H") {
+        processor.H = data / (16*16);
+        processor.L = data % (16*16);
+        return;
+    }
+    if (reg == "SP") {
+        processor.SP = data;
+        return;
+    }
+}
+
+void LHLD(uint16_t address) {
+    processor.L = processor.memory.readVal(address);
+    processor.H = processor.memory.readVal(address + 0x1);
+}
+
 void execute(uint16_t address) {
     processor.PC = address;
     string memIns;
@@ -186,6 +254,28 @@ void execute(uint16_t address) {
             processor.PC += 3;
             continue;
         }
+        if (ins.opcode == "LDAX") {
+            LDAX(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "STAX") {
+            STAX(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "LXI") {
+            uint16_t val = (processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1);
+            LXI(ins.operands[0], val);
+            processor.PC += 3;
+            continue;
+        }
+        if (ins.opcode == "LHLD") {
+            uint16_t address = (processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1);
+            LHLD(address);
+            processor.PC += 3;
+            continue;
+        }
         cout << "no HLT found\n";
         break;
     }
@@ -193,9 +283,13 @@ void execute(uint16_t address) {
 
 int main() {
     Reader reader;
-    reader.writeIns(0x2000, "MVI A,32");
-    reader.writeIns(0x2002, "STA 2050");
-    reader.writeIns(0x2005, "HLT");
+    reader.writeIns(0x2000,"MVI H,20");
+    reader.writeIns(0x2002,"MVI L,50");
+    reader.writeIns(0x2004,"MVI M,69");
+    reader.writeIns(0x2006,"MVI L,51");
+    reader.writeIns(0x2008,"MVI M,54");
+    reader.writeIns(0x200a,"LHLD 2050");
+    reader.writeIns(0x200d,"HLT");
     execute(0x2000);
     processor.showReg();
     processor.memory.display();
