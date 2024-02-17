@@ -30,12 +30,14 @@ class MemoryMapper {
             return memory[address].val;
         }
         void display() {
+            cout<< "--------------------------------"<<endl;
             for(auto i:memory) {
                 if(i.second.ins!="")
                     cout<< hex << i.first<<" "<< i.second.ins<<endl;
                 else
                     cout<< hex << i.first<<" "<< hex << unsigned(i.second.val)<<endl;
             }
+            cout<< "--------------------------------"<<endl;
         }
 };
 
@@ -62,6 +64,7 @@ class Processor {
         void resetFlag(int f) {flag[f]=false;}
         bool getFlag(int f) {return flag[f];}
         void showReg() {
+            cout<< "--------------------------------"<<endl;
             cout<<"A: "<< hex << unsigned(A)<<endl;
             cout<<"B: "<< hex << unsigned(B)<<endl;
             cout<<"C: "<< hex << unsigned(C)<<endl;
@@ -73,12 +76,12 @@ class Processor {
             cout<<"PC: "<< hex << unsigned(PC)<<endl;
             cout<<"Flags: ";
             for(int i=7;i>=0;i--) {
-                if (i==2 || i==4 || i==6)
+                if (i==1 || i==3 || i==5)
                     cout << "-" << " ";
                 else
                     cout<<flag[i]<<" ";
             }
-            cout<<endl;
+            cout<<"\n--------------------------------"<<endl;
         }
 };
 

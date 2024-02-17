@@ -17,6 +17,32 @@ Reader::Instruction makeIns(const string& instruction) {
     return result;
 }
 
+void write() {
+    Reader reader;
+    cout << "Enter the starting address: ";
+    string add_string;
+    cin >> add_string;
+    uint16_t address = reader.hexToDec16(add_string);
+    processor.PC = address;
+    cout << "Enter the instructions: (type 'exit' to stop)\n";
+    getchar();
+    while(true) {
+        string ins;
+        getline(cin, ins);
+        if (ins == "exit") break;
+        reader.writeIns(processor.PC, ins);
+    }
+}
+
+bool checkParity(uint8_t val) {
+    bool parity = true;
+    while(val) {
+        if(val & 1) parity = !parity;
+        val = val >> 1;
+    }
+    return parity;
+}
+
 void LDA(uint16_t address) {
     processor.A = processor.memory.readVal(address);
 }
@@ -244,9 +270,111 @@ void OUT(uint8_t address) {
 
 void IN(uint8_t address) {
     processor.A = processor.memory.readVal((uint16_t)address);
-} 
+}
 
-void execute(uint16_t address) {
+void ADD(string reg) {
+    if (reg == "A") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.A;
+        if (temp1 + temp2 > 255) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 + temp2 > 15) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A += processor.A;
+    }
+    else if (reg == "B") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.B;
+        if (temp1 + temp2 > 255) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 + temp2 > 15) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A += processor.B;
+    }
+    else if (reg == "C") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.C;
+        if (temp1 + temp2 > 255) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 + temp2 > 15) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A += processor.C;
+    }
+    else if (reg == "D") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.D;
+        if (temp1 + temp2 > 255) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 + temp2 > 15) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A += processor.D;
+    }
+    else if (reg == "E") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.E;
+        if (temp1 + temp2 > 255) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 + temp2 > 15) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A += processor.E;
+    }
+    else if (reg == "H") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.H;
+        if (temp1 + temp2 > 255) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 + temp2 > 15) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A += processor.H;
+    }
+    else if (reg == "L") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.L;
+        if (temp1 + temp2 > 255) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 + temp2 > 15) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A += processor.L;
+    }
+    else if (reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.memory.readVal(address);
+        if (temp1 + temp2 > 255) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 + temp2 > 15) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A += processor.memory.readVal(address);
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void execute() {
+    Reader reader;
+    cout << "Enter starting address: ";
+    string add_string;
+    cin >> add_string;
+    uint16_t address = reader.hexToDec16(add_string);
     processor.PC = address;
     string memIns;
     Reader::Instruction ins;
@@ -320,15 +448,41 @@ void execute(uint16_t address) {
             processor.PC += 2;
             continue;
         }
+        if (ins.opcode == "ADD") {
+            ADD(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
         cout << "no HLT found\n";
         break;
     }
+    cout << "Execution complete" << endl;
 }
 
 int main() {
-    Reader reader;
-    execute(0x2000);
-    processor.showReg();
-    processor.memory.display();
+    while(true) {
+        cout << "Menu:\n1. Write\n2. Execute\n3. Display Memory\n4. Display Registers\n5. Exit\n";
+        int choice;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        switch(choice) {
+            case 1:
+                write();
+                break;
+            case 2:
+                execute();
+                break;
+            case 3:
+                processor.memory.display();
+                break;
+            case 4:
+                processor.showReg();
+                break;
+            case 5:
+                return 0;
+            default:
+                cout << "Invalid choice\n";
+        }
+    }
     return 0;
 }

@@ -120,24 +120,29 @@ class Reader : public Processor{
         }
         void writeIns(uint16_t address, string instruction) {
             Instruction ins = splitIns(instruction);
+            processor.PC = address;
             if(ins.operands.size() == 0) {
                 processor.memory.writeIns(address, ins.opcode);
+                processor.PC += 0x1;
                 return;
             }
             if(ins.operands.size() == 1) {
                 if(isReg(ins.operands[0])) { // is register
                     processor.memory.writeIns(address, ins.opcode + " " + ins.operands[0]);
+                    processor.PC += 0x1;
                     return;
                 }
                 else if(is8bit(ins.operands[0])) { // is 8 bit
                     processor.memory.writeIns(address, ins.opcode);
                     processor.memory.writeVal(address+0x1, hexToDec8(ins.operands[0]));
+                    processor.PC += 0x2;
                     return;
                 }
                 else if(is16bit(ins.operands[0])) { // is 16 bit
                     processor.memory.writeIns(address, ins.opcode);
                     processor.memory.writeVal(address+0x1, (uint8_t)(hexToDec16(ins.operands[0]) % (16*16)));
                     processor.memory.writeVal(address+0x2, (uint8_t)(hexToDec16(ins.operands[0]) / (16*16)));
+                    processor.PC += 0x3;
                     return;
                 }
                 else {
@@ -148,23 +153,27 @@ class Reader : public Processor{
             if(ins.operands.size() == 2) {
                 if(isReg(ins.operands[0]) && isReg(ins.operands[1])) { // both operands are registers
                     processor.memory.writeIns(address, ins.opcode + " " + ins.operands[0] + " " + ins.operands[1]);
+                    processor.PC += 0x1;
                     return;
                 }
                 if(isReg(ins.operands[0]) && is8bit(ins.operands[1])) { // operand1 is register and operand2 is 8 bit
                     processor.memory.writeIns(address, ins.opcode + " " + ins.operands[0]);
                     processor.memory.writeVal(address+0x1, hexToDec8(ins.operands[1]));
+                    processor.PC += 0x2;
                     return;
                 }
                 if(isReg(ins.operands[0]) && is16bit(ins.operands[1])) { // operand1 is register and operand2 is 16 bit
                     processor.memory.writeIns(address, ins.opcode + " " + ins.operands[0]);
                     processor.memory.writeVal(address+0x1, (uint8_t)(hexToDec16(ins.operands[1]) % (16*16)));
                     processor.memory.writeVal(address+0x2, (uint8_t)(hexToDec16(ins.operands[1]) / (16*16)));
+                    processor.PC += 0x3;
                     return;
                 }
                 if(is8bit(ins.operands[0]) && is8bit(ins.operands[1])) { // operand1 is 8 bit and operand 2 is 8 bit
                     processor.memory.writeIns(address, ins.opcode);
                     processor.memory.writeVal(address+0x1, (uint8_t)(hexToDec16(ins.operands[1]) % (16*16)));
                     processor.memory.writeVal(address+0x2, (uint8_t)(hexToDec16(ins.operands[1]) / (16*16)));
+                    processor.PC += 0x3;
                     return;
                 }
                 else {
