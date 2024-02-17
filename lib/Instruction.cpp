@@ -223,6 +223,29 @@ void LHLD(uint16_t address) {
     processor.H = processor.memory.readVal(address + 0x1);
 }
 
+void SHLD(uint16_t address) {
+    processor.memory.writeVal(address, processor.L);
+    processor.memory.writeVal(address+0x1, processor.H);
+}
+
+void XCHG() {
+    uint8_t temp1, temp2;
+    temp1 = processor.D;
+    temp2 = processor.E;
+    processor.D = processor.H;
+    processor.E = processor.L;
+    processor.H = temp1;
+    processor.L = temp2;
+}
+
+void OUT(uint8_t address) {
+    processor.memory.writeVal((uint16_t)address, processor.A);
+}
+
+void IN(uint8_t address) {
+    processor.A = processor.memory.readVal((uint16_t)address);
+} 
+
 void execute(uint16_t address) {
     processor.PC = address;
     string memIns;
@@ -276,6 +299,27 @@ void execute(uint16_t address) {
             processor.PC += 3;
             continue;
         }
+        if (ins.opcode == "SHLD") {
+            uint16_t address = (processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1);
+            SHLD(address);
+            processor.PC += 3;
+            continue;
+        }
+        if (ins.opcode == "XCHG") {
+            XCHG();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "OUT") {
+            OUT(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
+            continue;
+        }
+        if (ins.opcode == "IN") {
+            IN(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
+            continue;
+        }
         cout << "no HLT found\n";
         break;
     }
@@ -283,13 +327,6 @@ void execute(uint16_t address) {
 
 int main() {
     Reader reader;
-    reader.writeIns(0x2000,"MVI H,20");
-    reader.writeIns(0x2002,"MVI L,50");
-    reader.writeIns(0x2004,"MVI M,69");
-    reader.writeIns(0x2006,"MVI L,51");
-    reader.writeIns(0x2008,"MVI M,54");
-    reader.writeIns(0x200a,"LHLD 2050");
-    reader.writeIns(0x200d,"HLT");
     execute(0x2000);
     processor.showReg();
     processor.memory.display();
