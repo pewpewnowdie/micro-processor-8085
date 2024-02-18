@@ -373,91 +373,99 @@ void ADC(string reg) {
     if (reg == "A") {
         int temp1 = (int)processor.A;
         int temp2 = (int)processor.A;
+        bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
         temp2 %= 16;
         if (temp1 + temp2 > 15) processor.flag[4] = true;
         else processor.flag[4] = false;
-        processor.A += processor.A + processor.flag[0];
+        processor.A += processor.A + prevCarry;
     }
     else if (reg == "B") {
         int temp1 = (int)processor.A;
         int temp2 = (int)processor.B;
+        bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
         temp2 %= 16;
         if (temp1 + temp2 > 15) processor.flag[4] = true;
         else processor.flag[4] = false;
-        processor.A += processor.B + processor.flag[0];
+        processor.A += processor.B + prevCarry;
     }
     else if (reg == "C") {
         int temp1 = (int)processor.A;
         int temp2 = (int)processor.C;
+        bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
         temp2 %= 16;
         if (temp1 + temp2 > 15) processor.flag[4] = true;
         else processor.flag[4] = false;
-        processor.A += processor.C + processor.flag[0];
+        processor.A += processor.C + prevCarry;
     }
     else if (reg == "D") {
         int temp1 = (int)processor.A;
         int temp2 = (int)processor.D;
+        bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
         temp2 %= 16;
         if (temp1 + temp2 > 15) processor.flag[4] = true;
         else processor.flag[4] = false;
-        processor.A += processor.D + processor.flag[0];
+        processor.A += processor.D + prevCarry;
     }
     else if (reg == "E") {
         int temp1 = (int)processor.A;
         int temp2 = (int)processor.E;
+        bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
         temp2 %= 16;
         if (temp1 + temp2 > 15) processor.flag[4] = true;
         else processor.flag[4] = false;
-        processor.A += processor.E + processor.flag[0];
+        processor.A += processor.E + prevCarry;
     }
     else if (reg == "H") {
         int temp1 = (int)processor.A;
         int temp2 = (int)processor.H;
+        bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
         temp2 %= 16;
         if (temp1 + temp2 > 15) processor.flag[4] = true;
         else processor.flag[4] = false;
-        processor.A += processor.H + processor.flag[0];
+        processor.A += processor.H + prevCarry;
     }
     else if (reg == "L") {
         int temp1 = (int)processor.A;
         int temp2 = (int)processor.L;
+        bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
         temp2 %= 16;
         if (temp1 + temp2 > 15) processor.flag[4] = true;
         else processor.flag[4] = false;
-        processor.A += processor.L + processor.flag[0];
+        processor.A += processor.L + prevCarry;
     }
     else if (reg == "M") {
         uint16_t address = (processor.H << 8) | processor.L;
         int temp1 = (int)processor.A;
         int temp2 = (int)processor.memory.readVal(address);
+        bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
         temp2 %= 16;
         if (temp1 + temp2 > 15) processor.flag[4] = true;
         else processor.flag[4] = false;
-        processor.A += processor.memory.readVal(address) + processor.flag[0];
+        processor.A += processor.memory.readVal(address) + prevCarry;
     }
     if (processor.A > 127) processor.flag[7] = true;
     else processor.flag[7] = false;
