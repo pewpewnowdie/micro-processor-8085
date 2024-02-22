@@ -2,13 +2,28 @@
 #include <string>
 #include "lib/Instruction.h"
 
+void banner() {
+    cout << R"(        
+    ___  ____                                                               _____ _____ _____  _____ 
+    |  \/  (_)                                                             |  _  |  _  |  _  ||  ___|
+    | .  . |_  ___ _ __ ___  _ __  _ __ ___   ___ ___  ___ ___  ___  _ __   \ V /| |/' |\ V / |___  | 
+    | |\/| | |/ __| '__/ _ \| '_ \| '__/ _ \ / __/ _ \/ __/ __|/ _ \| '__|  / _ \|  /| |/ _ \     \ \
+    | |  | | | (__| | | (_) | |_) | | | (_) | (_|  __/\__ \__ \ (_) | |    | |_| \ |_/ / |_| |/\__/ /
+    \_|  |_/_|\___|_|  \___/| .__/|_|  \___/ \___\___||___/___/\___/|_|    \_____/\___/\_____/\____/ 
+                            | |                                                                      
+                            |_|                                                                      
+    )" << endl;
+}
+
 void displayMenu() {
-    cout << "Menu:\n";
-    cout << "1. Write\n";
-    cout << "2. Execute\n";
-    cout << "3. Display Memory\n";
-    cout << "4. Display Registers\n";
-    cout << "5. Exit\n";
+    cout << "+-----------------------------------------------------------------------------------------------+" << endl;
+    cout << "|                                    Menu:                                                      |" << endl;
+    cout << "|                                    1. Write                                                   |" << endl;
+    cout << "|                                    2. Execute                                                 |" << endl;
+    cout << "|                                    3. Display Memory                                          |" << endl;
+    cout << "|                                    4. Display Registers                                       |" << endl;
+    cout << "|                                    5. Exit                                                    |" << endl;
+    cout << "+-----------------------------------------------------------------------------------------------+" << endl;
 }
 
 int getUserChoice() {
@@ -41,6 +56,7 @@ void processChoice(int choice) {
 }
 
 int main() {
+    banner();
     while(true) {
         displayMenu();
         int choice = getUserChoice();

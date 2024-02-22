@@ -27,6 +27,7 @@ void write() {
     cout << "Enter the instructions: (type 'exit' to stop)\n";
     getchar();
     while(true) {
+        cout << hex << processor.PC << " ";
         string ins;
         getline(cin, ins);
         if (ins == "exit") break;
@@ -275,7 +276,7 @@ void IN(uint8_t address) {
 void ADD(string reg) {
     if (reg == "A") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.A + (int)processor.flag[0];
+        int temp2 = (int)processor.A;
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
@@ -286,7 +287,7 @@ void ADD(string reg) {
     }
     else if (reg == "B") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.B + (int)processor.flag[0];
+        int temp2 = (int)processor.B;
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
@@ -297,7 +298,7 @@ void ADD(string reg) {
     }
     else if (reg == "C") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.C + (int)processor.flag[0];
+        int temp2 = (int)processor.C;
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
@@ -308,7 +309,7 @@ void ADD(string reg) {
     }
     else if (reg == "D") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.D + (int)processor.flag[0];
+        int temp2 = (int)processor.D;
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
@@ -319,7 +320,7 @@ void ADD(string reg) {
     }
     else if (reg == "E") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.E + (int)processor.flag[0];
+        int temp2 = (int)processor.E;
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
@@ -330,7 +331,7 @@ void ADD(string reg) {
     }
     else if (reg == "H") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.H + (int)processor.flag[0];
+        int temp2 = (int)processor.H;
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
@@ -341,7 +342,7 @@ void ADD(string reg) {
     }
     else if (reg == "L") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.L + (int)processor.flag[0];
+        int temp2 = (int)processor.L;
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
@@ -353,7 +354,7 @@ void ADD(string reg) {
     else if (reg == "M") {
         uint16_t address = (processor.H << 8) | processor.L;
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.memory.readVal(address) + (int)processor.flag[0];
+        int temp2 = (int)processor.memory.readVal(address);
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
         temp1 %= 16;
@@ -372,7 +373,7 @@ void ADD(string reg) {
 void ADC(string reg) {
     if (reg == "A") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.A;
+        int temp2 = (int)processor.A + (int)processor.flag[0];
         bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
@@ -384,7 +385,7 @@ void ADC(string reg) {
     }
     else if (reg == "B") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.B;
+        int temp2 = (int)processor.B + (int)processor.flag[0];
         bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
@@ -396,7 +397,7 @@ void ADC(string reg) {
     }
     else if (reg == "C") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.C;
+        int temp2 = (int)processor.C + (int)processor.flag[0];
         bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
@@ -408,7 +409,7 @@ void ADC(string reg) {
     }
     else if (reg == "D") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.D;
+        int temp2 = (int)processor.D + (int)processor.flag[0];
         bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
@@ -420,7 +421,7 @@ void ADC(string reg) {
     }
     else if (reg == "E") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.E;
+        int temp2 = (int)processor.E + (int)processor.flag[0];
         bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
@@ -432,7 +433,7 @@ void ADC(string reg) {
     }
     else if (reg == "H") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.H;
+        int temp2 = (int)processor.H + (int)processor.flag[0];
         bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
@@ -444,7 +445,7 @@ void ADC(string reg) {
     }
     else if (reg == "L") {
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.L;
+        int temp2 = (int)processor.L + (int)processor.flag[0];
         bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
@@ -457,7 +458,7 @@ void ADC(string reg) {
     else if (reg == "M") {
         uint16_t address = (processor.H << 8) | processor.L;
         int temp1 = (int)processor.A;
-        int temp2 = (int)processor.memory.readVal(address);
+        int temp2 = (int)processor.memory.readVal(address) + (int)processor.flag[0];
         bool prevCarry = processor.flag[0];
         if (temp1 + temp2 > 255) processor.flag[0] = true;
         else processor.flag[0] = false;
@@ -467,6 +468,23 @@ void ADC(string reg) {
         else processor.flag[4] = false;
         processor.A += processor.memory.readVal(address) + prevCarry;
     }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void ADI(uint8_t val) {
+    int temp1 = (int)processor.A;
+    int temp2 = (int)val;
+    if (temp1 + temp2 > 255) processor.flag[0] = true;
+    else processor.flag[0] = false;
+    temp1 %= 16;
+    temp2 %= 16;
+    if (temp1 + temp2 > 15) processor.flag[4] = true;
+    else processor.flag[4] = false;
+    processor.A += val;
     if (processor.A > 127) processor.flag[7] = true;
     else processor.flag[7] = false;
     if (processor.A == 0) processor.flag[6] = true;
@@ -561,6 +579,11 @@ void execute() {
         if (ins.opcode == "ADC") {
             ADC(ins.operands[0]);
             processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "ADI") {
+            ADI(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
             continue;
         }
         cout << "error : no HLT found, faulty instruction set\n";
