@@ -220,10 +220,6 @@ void STAX(string reg) {
 }
 
 void LXI(string reg, uint16_t data) {
-    if (!(reg == "B" || reg == "D" || reg == "H" || reg == "SP")) {
-        processor.PC += 3;
-        return;
-    }
     if (reg == "B") {
         processor.B = data / (16*16);
         processor.C = data % (16*16);
@@ -271,6 +267,75 @@ void OUT(uint8_t address) {
 
 void IN(uint8_t address) {
     processor.A = processor.memory.readVal((uint16_t)address);
+}
+
+void PUSH(string reg) {
+    if (reg == "B") {
+        processor.memory.writeVal(processor.SP - 1, processor.B);
+        processor.memory.writeVal(processor.SP - 2, processor.C);
+        processor.SP -= 2;
+    }
+    if (reg == "D") {
+        processor.memory.writeVal(processor.SP - 1, processor.D);
+        processor.memory.writeVal(processor.SP - 2, processor.E);
+        processor.SP -= 2;
+    }
+    if (reg == "H") {
+        processor.memory.writeVal(processor.SP - 1, processor.H);
+        processor.memory.writeVal(processor.SP - 2, processor.L);
+        processor.SP -= 2;
+    }
+    if (reg == "PSW") {
+        processor.memory.writeVal(processor.SP - 1, processor.A);
+        uint8_t flags = 0;
+        for (int i = 0; i < 8; i++) {
+            flags = flags << 1;
+            if (processor.flag[i]) flags |= 1;
+        }
+        processor.memory.writeVal(processor.SP - 2, flags);
+        processor.SP -= 2;
+    }
+}
+
+void POP(string reg) {
+    if (reg == "B") {
+        processor.C = processor.memory.readVal(processor.SP);
+        processor.B = processor.memory.readVal(processor.SP + 1);
+        processor.SP += 2;
+    }
+    if (reg == "D") {
+        processor.E = processor.memory.readVal(processor.SP);
+        processor.D = processor.memory.readVal(processor.SP + 1);
+        processor.SP += 2;
+    }
+    if (reg == "H") {
+        processor.L = processor.memory.readVal(processor.SP);
+        processor.H = processor.memory.readVal(processor.SP + 1);
+        processor.SP += 2;
+    }
+    if (reg == "PSW") {
+        uint8_t flags = processor.memory.readVal(processor.SP);
+        processor.A = processor.memory.readVal(processor.SP + 1);
+        for (int i = 0; i < 8; i++) {
+            processor.flag[i] = flags & 1;
+            flags = flags >> 1;
+        }
+        processor.SP += 2;
+    }
+}
+
+void SPHL() {
+    processor.SP = (processor.H << 8) | processor.L;
+}
+
+void XTHL() {
+    uint8_t temp1, temp2;
+    temp1 = processor.memory.readVal(processor.SP);
+    temp2 = processor.memory.readVal(processor.SP + 1);
+    processor.memory.writeVal(processor.SP, processor.L);
+    processor.memory.writeVal(processor.SP + 1, processor.H);
+    processor.L = temp1;
+    processor.H = temp2;
 }
 
 void ADD(string reg) {
@@ -492,6 +557,57 @@ void ADI(uint8_t val) {
     processor.flag[2] = checkParity(processor.A);
 }
 
+void ACI(uint8_t val) {
+    int temp1 = (int)processor.A;
+    int temp2 = (int)val + (int)processor.flag[0];
+    bool prevCarry = processor.flag[0];
+    if (temp1 + temp2 > 255) processor.flag[0] = true;
+    else processor.flag[0] = false;
+    temp1 %= 16;
+    temp2 %= 16;
+    if (temp1 + temp2 > 15) processor.flag[4] = true;
+    else processor.flag[4] = false;
+    processor.A += val + prevCarry;
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void DAD(string reg) {
+    if(reg == "B") {
+        uint16_t val = (processor.B << 8) | processor.C;
+        uint16_t temp = (processor.H << 8) | processor.L;
+        int temp1 = (int)val + (int)temp;
+        if (temp1 > 65535) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        uint16_t res = val + temp;
+        processor.H = res / (16*16);
+        processor.L = res % (16*16);
+    }
+    if(reg == "D") {
+        uint16_t val = (processor.D << 8) | processor.E;
+        uint16_t temp = (processor.H << 8) | processor.L;
+        int temp1 = (int)val + (int)temp;
+        if (temp1 > 65535) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        uint16_t res = val + temp;
+        processor.H = res / (16*16);
+        processor.L = res % (16*16);
+    }
+    if(reg == "H") {
+        uint16_t val = (processor.H << 8) | processor.L;
+        uint16_t temp = (processor.H << 8) | processor.L;
+        int temp1 = (int)val + (int)temp;
+        if (temp1 > 65535) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        uint16_t res = val + temp;
+        processor.H = res / (16*16);
+        processor.L = res % (16*16);
+    }
+}
+
 void execute() {
     Reader reader;
     cout << "Enter starting address: ";
@@ -571,6 +687,26 @@ void execute() {
             processor.PC += 2;
             continue;
         }
+        if (ins.opcode == "PUSH") {
+            PUSH(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "POP") {
+            POP(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "SPHL") {
+            SPHL();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "XTHL") {
+            XTHL();
+            processor.PC += 1;
+            continue;
+        }
         if (ins.opcode == "ADD") {
             ADD(ins.operands[0]);
             processor.PC += 1;
@@ -584,6 +720,16 @@ void execute() {
         if (ins.opcode == "ADI") {
             ADI(processor.memory.readVal(processor.PC + 1));
             processor.PC += 2;
+            continue;
+        }
+        if (ins.opcode == "ACI") {
+            ACI(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
+            continue;
+        }
+        if (ins.opcode == "DAD") {
+            DAD(ins.operands[0]);
+            processor.PC += 1;
             continue;
         }
         cout << "error : no HLT found, faulty instruction set\n";

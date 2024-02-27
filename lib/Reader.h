@@ -73,6 +73,7 @@ class Reader : public Processor{
         }
         bool isReg(const string& operand) {
             if(operand == "SP") return true;
+            if(operand == "PSW") return true;
             if(operand.size() != 1)
                 return false;
             if(operand[0] == 'A' || operand[0] == 'B' || operand[0] == 'C' || operand[0] == 'D' || operand[0] == 'E' || operand[0] == 'H' || operand[0] == 'L' || operand[0] == 'M') 
