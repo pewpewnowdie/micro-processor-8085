@@ -338,6 +338,64 @@ void XTHL() {
     processor.H = temp2;
 }
 
+void JMP(uint16_t address) {
+    processor.PC = address;
+}
+
+void JC(uint16_t address) {
+    if (processor.flag[0]) processor.PC = address;
+    else processor.PC += 3;
+}
+
+void JNC(uint16_t address) {
+    if (!processor.flag[0]) processor.PC = address;
+    else processor.PC += 3;
+}
+
+void JZ(uint16_t address) {
+    if (processor.flag[6]) processor.PC = address;
+    else processor.PC += 3;
+}
+
+void JNZ(uint16_t address) {
+    if (!processor.flag[6]) processor.PC = address;
+    else processor.PC += 3;
+}
+
+void JP(uint16_t address) {
+    if (!processor.flag[7]) processor.PC = address;
+    else processor.PC += 3;
+}
+
+void JM(uint16_t address) {
+    if (processor.flag[7]) processor.PC = address;
+    else processor.PC += 3;
+}
+
+void JPE(uint16_t address) {
+    if (processor.flag[2]) processor.PC = address;
+    else processor.PC += 3;
+}
+
+void JPO(uint16_t address) {
+    if (!processor.flag[2]) processor.PC = address;
+    else processor.PC += 3;
+}
+
+void CALL(uint16_t address) {
+    processor.PC += 3;
+    processor.memory.writeVal(processor.SP - 1, processor.PC / (16*16));
+    processor.memory.writeVal(processor.SP - 2, processor.PC % (16*16));
+    processor.SP -= 2;
+    processor.PC = address;
+}
+
+void RET() {
+    processor.PC = processor.memory.readVal(processor.SP + 1);
+    processor.PC = processor.PC * (16*16) + processor.memory.readVal(processor.SP);
+    processor.SP += 2;
+}
+
 void ADD(string reg) {
     if (reg == "A") {
         int temp1 = (int)processor.A;
@@ -705,6 +763,50 @@ void execute() {
         if (ins.opcode == "XTHL") {
             XTHL();
             processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "JMP") {
+            JMP((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "JC") {
+            JC((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "JNC") {
+            JNC((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "JZ") {
+            JZ((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "JNZ") {
+            JNZ((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "JP") {
+            JP((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "JM") {
+            JM((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "JPE") {
+            JPE((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "JPO") {
+            JPO((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "CALL") {
+            CALL((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if(ins.opcode == "RET") {
+            RET();
             continue;
         }
         if (ins.opcode == "ADD") {

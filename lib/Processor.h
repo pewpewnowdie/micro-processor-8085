@@ -34,8 +34,12 @@ class MemoryMapper {
             for(auto i:memory) {
                 if(i.second.ins!="")
                     cout<< hex << i.first<<" "<< i.second.ins<<endl;
-                else
-                    cout<< hex << i.first<<" "<< hex << unsigned(i.second.val)<<endl;
+                else {
+                    if (i.second.val < 16)
+                        cout << hex << i.first<<" 0" << hex << unsigned(i.second.val)<<endl;
+                    else
+                        cout<< hex << i.first<<" "<< hex << unsigned(i.second.val)<<endl;
+                }
             }
             cout<< "--------------------------------"<<endl;
         }
@@ -65,15 +69,36 @@ class Processor {
         bool getFlag(int f) {return flag[f];}
         void showReg() {
             cout<< "--------------------------------"<<endl;
-            cout<<"A: "<< hex << unsigned(A)<<endl;
-            cout<<"B: "<< hex << unsigned(B)<<endl;
-            cout<<"C: "<< hex << unsigned(C)<<endl;
-            cout<<"D: "<< hex << unsigned(D)<<endl;
-            cout<<"E: "<< hex << unsigned(E)<<endl;
-            cout<<"H: "<< hex << unsigned(H)<<endl;
-            cout<<"L: "<< hex << unsigned(L)<<endl;
-            cout<<"SP: "<< hex << unsigned(SP)<<endl;
-            cout<<"PC: "<< hex << unsigned(PC)<<endl;
+            if (A < 16)
+                cout << "A: 0" << hex << unsigned(A) << endl;
+            else
+                cout << "A: " << hex << unsigned(A) << endl;
+            if (B < 16)
+                cout << "B: 0" << hex << unsigned(B) << endl;
+            else
+                cout << "B: " << hex << unsigned(B) << endl;
+            if (C < 16)
+                cout << "C: 0" << hex << unsigned(C) << endl;
+            else
+                cout << "C: " << hex << unsigned(C) << endl;
+            if (D < 16)
+                cout << "D: 0" << hex << unsigned(D) << endl;
+            else
+                cout << "D: " << hex << unsigned(D) << endl;
+            if (E < 16)
+                cout << "E: 0" << hex << unsigned(E) << endl;
+            else
+                cout << "E: " << hex << unsigned(E) << endl;
+            if (H < 16)
+                cout << "H: 0" << hex << unsigned(H) << endl;
+            else
+                cout << "H: " << hex << unsigned(H) << endl;
+            if (L < 16)
+                cout << "L: 0" << hex << unsigned(L) << endl;
+            else
+                cout << "L: " << hex << unsigned(L) << endl;
+            cout << "SP: " << hex << unsigned(SP) << endl;
+            cout << "PC: " << hex << unsigned(PC) << endl;
             cout<<"Flags: ";
             for(int i=7;i>=0;i--) {
                 if (i==1 || i==3 || i==5)
