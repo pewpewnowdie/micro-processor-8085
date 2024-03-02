@@ -1089,6 +1089,222 @@ void DAA() {
     processor.flag[2] = checkParity(processor.A);
 }
 
+void CMP(string reg) {
+    if (reg == "A") {
+        processor.flag[6] = true;
+    }
+    if (reg == "B") {
+        if (processor.A == processor.B) processor.flag[6] = true;
+        else processor.flag[6] = false;
+        if (processor.A < processor.B) processor.flag[0] = true;
+        else processor.flag[0] = false;
+    }
+    if (reg == "C") {
+        if (processor.A == processor.C) processor.flag[6] = true;
+        else processor.flag[6] = false;
+        if (processor.A < processor.C) processor.flag[0] = true;
+        else processor.flag[0] = false;
+    }
+    if (reg == "D") {
+        if (processor.A == processor.D) processor.flag[6] = true;
+        else processor.flag[6] = false;
+        if (processor.A < processor.D) processor.flag[0] = true;
+        else processor.flag[0] = false;
+    }
+    if (reg == "E") {
+        if (processor.A == processor.E) processor.flag[6] = true;
+        else processor.flag[6] = false;
+        if (processor.A < processor.E) processor.flag[0] = true;
+        else processor.flag[0] = false;
+    }
+    if (reg == "H") {
+        if (processor.A == processor.H) processor.flag[6] = true;
+        else processor.flag[6] = false;
+        if (processor.A < processor.H) processor.flag[0] = true;
+        else processor.flag[0] = false;
+    }
+    if (reg == "L") {
+        if (processor.A == processor.L) processor.flag[6] = true;
+        else processor.flag[6] = false;
+        if (processor.A < processor.L) processor.flag[0] = true;
+        else processor.flag[0] = false;
+    }
+    if (reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        if (processor.A == processor.memory.readVal(address)) processor.flag[6] = true;
+        else processor.flag[6] = false;
+        if (processor.A < processor.memory.readVal(address)) processor.flag[0] = true;
+        else processor.flag[0] = false;
+    }
+}
+
+void CPI(uint8_t val) {
+    if (processor.A == val) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    if (processor.A < val) processor.flag[0] = true;
+    else processor.flag[0] = false;
+}
+
+void ANA(string reg) {
+    if (reg == "A") {
+        processor.A &= processor.A;
+    }
+    if (reg == "B") {
+        processor.A &= processor.B;
+    }
+    if (reg == "C") {
+        processor.A &= processor.C;
+    }
+    if (reg == "D") {
+        processor.A &= processor.D;
+    }
+    if (reg == "E") {
+        processor.A &= processor.E;
+    }
+    if (reg == "H") {
+        processor.A &= processor.H;
+    }
+    if (reg == "L") {
+        processor.A &= processor.L;
+    }
+    if (reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        processor.A &= processor.memory.readVal(address);
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void ANI(uint8_t val) {
+    processor.A &= val;
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void XRA(string reg) {
+    if (reg == "A") {
+        processor.A ^= processor.A;
+    }
+    if (reg == "B") {
+        processor.A ^= processor.B;
+    }
+    if (reg == "C") {
+        processor.A ^= processor.C;
+    }
+    if (reg == "D") {
+        processor.A ^= processor.D;
+    }
+    if (reg == "E") {
+        processor.A ^= processor.E;
+    }
+    if (reg == "H") {
+        processor.A ^= processor.H;
+    }
+    if (reg == "L") {
+        processor.A ^= processor.L;
+    }
+    if (reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        processor.A ^= processor.memory.readVal(address);
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void XRI(uint8_t val) {
+    processor.A ^= val;
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void ORA(string reg) {
+    if (reg == "A") {
+        processor.A |= processor.A;
+    }
+    if (reg == "B") {
+        processor.A |= processor.B;
+    }
+    if (reg == "C") {
+        processor.A |= processor.C;
+    }
+    if (reg == "D") {
+        processor.A |= processor.D;
+    }
+    if (reg == "E") {
+        processor.A |= processor.E;
+    }
+    if (reg == "H") {
+        processor.A |= processor.H;
+    }
+    if (reg == "L") {
+        processor.A |= processor.L;
+    }
+    if (reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        processor.A |= processor.memory.readVal(address);
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void ORI(uint8_t val) {
+    processor.A |= val;
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void RLC() {
+    processor.flag[0] = (processor.A & 0x80) >> 7;
+    processor.A = (processor.A << 1) | (processor.A & 0x80) >> 7;
+}
+
+void RAL() {
+    uint8_t temp = processor.flag[0];
+    processor.flag[0] = (processor.A & 0x80) >> 7;
+    processor.A = (processor.A << 1) | temp;
+}
+
+void RRC() {
+    processor.flag[0] = processor.A & 0x01;
+    processor.A = (processor.A >> 1) | (processor.A & 0x01) << 7;
+}
+
+void RAR() {
+    uint8_t temp = processor.flag[0];
+    processor.flag[0] = processor.A & 0x01;
+    processor.A = (processor.A >> 1) | temp << 7;
+}
+
+void CMA() {
+    processor.A = ~processor.A;
+}
+
+void CMC() {
+    processor.flag[0] = ~processor.flag[0];
+}
+
+void STC() {
+    processor.flag[0] = true;
+}
+
 void execute() {
     Reader reader;
     cout << "Enter starting address: ";
@@ -1363,6 +1579,85 @@ void execute() {
         }
         if (ins.opcode == "DAA") {
             DAA();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "CMP") {
+            CMP(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "CPI") {
+            CPI(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
+            continue;
+        }
+        if (ins.opcode == "ANA") {
+            ANA(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "ANI") {
+            ANI(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
+            continue;
+        }
+        if (ins.opcode == "XRA") {
+            XRA(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "XRI") {
+            XRI(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
+            continue;
+        }
+        if (ins.opcode == "ORA") {
+            ORA(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "ORI") {
+            ORI(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
+            continue;
+        }
+        if (ins.opcode == "RLC") {
+            RLC();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "RAL") {
+            RAL();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "RRC") {
+            RRC();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "RAR") {
+            RAR();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "CMA") {
+            CMA();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "CMC") {
+            CMC();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "STC") {
+            STC();
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "NOP") {
             processor.PC += 1;
             continue;
         }

@@ -16,14 +16,14 @@ void banner() {
 }
 
 void displayMenu() {
-    cout << "+-----------------------------------------------------------------------------------------------+" << endl;
-    cout << "|                                    Menu:                                                      |" << endl;
-    cout << "|                                    1. Write                                                   |" << endl;
-    cout << "|                                    2. Execute                                                 |" << endl;
-    cout << "|                                    3. Display Memory                                          |" << endl;
-    cout << "|                                    4. Display Registers                                       |" << endl;
-    cout << "|                                    5. Exit                                                    |" << endl;
-    cout << "+-----------------------------------------------------------------------------------------------+" << endl;
+    cout << "+---------------------------------------------------------------------------------------------------+" << endl;
+    cout << "|                                        Menu:                                                      |" << endl;
+    cout << "|                                        1. Write                                                   |" << endl;
+    cout << "|                                        2. Execute                                                 |" << endl;
+    cout << "|                                        3. Display Memory                                          |" << endl;
+    cout << "|                                        4. Display Registers                                       |" << endl;
+    cout << "|                                        5. Exit                                                    |" << endl;
+    cout << "+---------------------------------------------------------------------------------------------------+" << endl;
 }
 
 int getUserChoice() {
