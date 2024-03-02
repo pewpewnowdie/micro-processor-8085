@@ -24,13 +24,13 @@ void write() {
     cin >> add_string;
     uint16_t address = reader.hexToDec16(add_string);
     processor.PC = address;
-    cout << "Enter the instructions: (type 'exit' to stop)\n";
+    cout << "Enter the instructions: (type 'reset' to stop)\n";
     getchar();
     while(true) {
         cout << hex << processor.PC << " ";
         string ins;
         getline(cin, ins);
-        if (ins == "exit") break;
+        if (ins == "reset") break;
         reader.writeIns(processor.PC, ins);
     }
 }
@@ -390,10 +390,94 @@ void CALL(uint16_t address) {
     processor.PC = address;
 }
 
+void CC(uint16_t address) {
+    if (processor.flag[0]) CALL(address);
+    else processor.PC += 3;
+}
+
+void CNC(uint16_t address) {
+    if (!processor.flag[0]) CALL(address);
+    else processor.PC += 3;
+}
+
+void CZ(uint16_t address) {
+    if (processor.flag[6]) CALL(address);
+    else processor.PC += 3;
+}
+
+void CNZ(uint16_t address) {
+    if (!processor.flag[6]) CALL(address);
+    else processor.PC += 3;
+}
+
+void CP(uint16_t address) {
+    if (!processor.flag[7]) CALL(address);
+    else processor.PC += 3;
+}
+
+void CM(uint16_t address) {
+    if (processor.flag[7]) CALL(address);
+    else processor.PC += 3;
+}
+
+void CPE(uint16_t address) {
+    if (processor.flag[2]) CALL(address);
+    else processor.PC += 3;
+}
+
+void CPO(uint16_t address) {
+    if (!processor.flag[2]) CALL(address);
+    else processor.PC += 3;
+}
+
 void RET() {
     processor.PC = processor.memory.readVal(processor.SP + 1);
     processor.PC = processor.PC * (16*16) + processor.memory.readVal(processor.SP);
     processor.SP += 2;
+}
+
+void RC(uint16_t address) {
+    if (processor.flag[0]) RET();
+    else processor.PC += 1;
+}
+
+void RNC(uint16_t address) {
+    if (!processor.flag[0]) RET();
+    else processor.PC += 1;
+}
+
+void RZ(uint16_t address) {
+    if (processor.flag[6]) RET();
+    else processor.PC += 1;
+}
+
+void RNZ(uint16_t address) {
+    if (!processor.flag[6]) RET();
+    else processor.PC += 1;
+}
+
+void RP(uint16_t address) {
+    if (!processor.flag[7]) RET();
+    else processor.PC += 1;
+}
+
+void RM(uint16_t address) {
+    if (processor.flag[7]) RET();
+    else processor.PC += 1;
+}
+
+void RPE(uint16_t address) {
+    if (processor.flag[2]) RET();
+    else processor.PC += 1;
+}
+
+void RPO(uint16_t address) {
+    if (!processor.flag[2]) RET();
+    else processor.PC += 1;
+}
+
+void PCHL() {
+    processor.PC = (processor.H << 8) | processor.L;
 }
 
 void ADD(string reg) {
@@ -666,6 +750,345 @@ void DAD(string reg) {
     }
 }
 
+void SUB(string reg) {
+    if(reg == "A") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.A;
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.A;
+    }
+    if(reg == "B") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.B;
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.B;
+    }
+    if(reg == "C") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.C;
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.C;
+    }
+    if(reg == "D") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.D;
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.D;
+    }
+    if(reg == "E") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.E;
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.E;
+    }
+    if(reg == "H") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.H;
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.H;
+    }
+    if(reg == "L") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.L;
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.L;
+    }
+    if(reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.memory.readVal(address);
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.memory.readVal(address);
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void SBB(string reg) {
+    if(reg == "A") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.A + (int)processor.flag[0];
+        bool prevCarry = processor.flag[0];
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.A + prevCarry;
+    }
+    if(reg == "B") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.B + (int)processor.flag[0];
+        bool prevCarry = processor.flag[0];
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.B + prevCarry;
+    }
+    if(reg == "C") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.C + (int)processor.flag[0];
+        bool prevCarry = processor.flag[0];
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.C + prevCarry;
+    }
+    if(reg == "D") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.D + (int)processor.flag[0];
+        bool prevCarry = processor.flag[0];
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.D + prevCarry;
+    }
+    if(reg == "E") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.E + (int)processor.flag[0];
+        bool prevCarry = processor.flag[0];
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.E + prevCarry;
+    }
+    if(reg == "H") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.H + (int)processor.flag[0];
+        bool prevCarry = processor.flag[0];
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.H + prevCarry;
+    }
+    if(reg == "L") {
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.L + (int)processor.flag[0];
+        bool prevCarry = processor.flag[0];
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.L + prevCarry;
+    }
+    if(reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        int temp1 = (int)processor.A;
+        int temp2 = (int)processor.memory.readVal(address) + (int)processor.flag[0];
+        bool prevCarry = processor.flag[0];
+        if (temp1 - temp2 < 0) processor.flag[0] = true;
+        else processor.flag[0] = false;
+        temp1 %= 16;
+        temp2 %= 16;
+        if (temp1 - temp2 < 0) processor.flag[4] = true;
+        else processor.flag[4] = false;
+        processor.A -= processor.memory.readVal(address) + prevCarry;
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void SUI(uint8_t val) {
+    int temp1 = (int)processor.A;
+    int temp2 = (int)val;
+    if (temp1 - temp2 < 0) processor.flag[0] = true;
+    else processor.flag[0] = false;
+    temp1 %= 16;
+    temp2 %= 16;
+    if (temp1 - temp2 < 0) processor.flag[4] = true;
+    else processor.flag[4] = false;
+    processor.A -= val;
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void INR(string reg) {
+    if(reg == "A")
+        processor.A += 1;
+    if(reg == "B")
+        processor.B += 1;
+    if(reg == "C")
+        processor.C += 1;
+    if(reg == "D")
+        processor.D += 1;
+    if(reg == "E")
+        processor.E += 1;
+    if(reg == "H")
+        processor.H += 1;
+    if(reg == "L")
+        processor.L += 1;
+    if(reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        processor.memory.writeVal(address, processor.memory.readVal(address) + 1);
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void INX(string reg) {
+    if(reg == "B") {
+        uint16_t val = (processor.B << 8) | processor.C;
+        val += 1;
+        processor.B = val / (16*16);
+        processor.C = val % (16*16);
+    }
+    if(reg == "D") {
+        uint16_t val = (processor.D << 8) | processor.E;
+        val += 1;
+        processor.D = val / (16*16);
+        processor.E = val % (16*16);
+    }
+    if(reg == "H") {
+        uint16_t val = (processor.H << 8) | processor.L;
+        val += 1;
+        processor.H = val / (16*16);
+        processor.L = val % (16*16);
+    }
+    if(reg == "SP") {
+        processor.SP += 1;
+    }
+}
+
+void DCR(string reg) {
+    if(reg == "A")
+        processor.A -= 1;
+    if(reg == "B")
+        processor.B -= 1;
+    if(reg == "C")
+        processor.C -= 1;
+    if(reg == "D")
+        processor.D -= 1;
+    if(reg == "E")
+        processor.E -= 1;
+    if(reg == "H")
+        processor.H -= 1;
+    if(reg == "L")
+        processor.L -= 1;
+    if(reg == "M") {
+        uint16_t address = (processor.H << 8) | processor.L;
+        processor.memory.writeVal(address, processor.memory.readVal(address) - 1);
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
+void DCX(string reg) {
+    if(reg == "B") {
+        uint16_t val = (processor.B << 8) | processor.C;
+        val -= 1;
+        processor.B = val / (16*16);
+        processor.C = val % (16*16);
+    }
+    if(reg == "D") {
+        uint16_t val = (processor.D << 8) | processor.E;
+        val -= 1;
+        processor.D = val / (16*16);
+        processor.E = val % (16*16);
+    }
+    if(reg == "H") {
+        uint16_t val = (processor.H << 8) | processor.L;
+        val -= 1;
+        processor.H = val / (16*16);
+        processor.L = val % (16*16);
+    }
+    if(reg == "SP") {
+        processor.SP -= 1;
+    }
+}
+
+void DAA() {
+    int temp = (int)processor.A;
+    if (temp % 16 > 9 || processor.flag[4]) {
+        temp += 6;
+        processor.A = temp % 16;
+        processor.flag[4] = true;
+    }
+    temp = (int)processor.A;
+    if (temp / 16 > 9 || processor.flag[0]) {
+        temp += 96;
+        processor.A = temp / 16;
+        processor.flag[0] = true;
+    }
+    if (processor.A > 127) processor.flag[7] = true;
+    else processor.flag[7] = false;
+    if (processor.A == 0) processor.flag[6] = true;
+    else processor.flag[6] = false;
+    processor.flag[2] = checkParity(processor.A);
+}
+
 void execute() {
     Reader reader;
     cout << "Enter starting address: ";
@@ -805,8 +1228,77 @@ void execute() {
             CALL((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
             continue;
         }
+        if (ins.opcode == "CC") {
+            CC((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "CNC") {
+            CNC((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "CZ") {
+            CZ((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "CNZ") {
+            CNZ((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "CP") {
+            CP((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "CM") {
+            CM((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "CPE") {
+            CPE((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "CPO") {
+            CPO((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "PCHL") {
+            PCHL();
+            processor.PC += 1;
+            continue;
+        }
         if(ins.opcode == "RET") {
             RET();
+            continue;
+        }
+        if (ins.opcode == "RC") {
+            RC((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "RNC") {
+            RNC((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "RZ") {
+            RZ((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "RNZ") {
+            RNZ((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "RP") {
+            RP((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "RM") {
+            RM((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "RPE") {
+            RPE((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
+            continue;
+        }
+        if (ins.opcode == "RPO") {
+            RPO((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
             continue;
         }
         if (ins.opcode == "ADD") {
@@ -834,7 +1326,47 @@ void execute() {
             processor.PC += 1;
             continue;
         }
-        cout << "error : no HLT found, faulty instruction set\n";
+        if (ins.opcode == "SUB") {
+            SUB(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "SBB") {
+            SBB(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "SUI") {
+            SUI(processor.memory.readVal(processor.PC + 1));
+            processor.PC += 2;
+            continue;
+        }
+        if (ins.opcode == "INR") {
+            INR(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "INX") {
+            INX(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "DCR") {
+            DCR(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "DCX") {
+            DCX(ins.operands[0]);
+            processor.PC += 1;
+            continue;
+        }
+        if (ins.opcode == "DAA") {
+            DAA();
+            processor.PC += 1;
+            continue;
+        }
+        cout << "error : faulty instruction set\n";
         break;
     }
     cout << "Execution complete" << endl;
