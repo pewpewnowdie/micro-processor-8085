@@ -27,6 +27,7 @@ Welcome to the 8085 Simulator! This simulator allows you to explore the 8085 mic
    - Choose option `1` from the menu.
    - Enter the starting address for your program.
    - Write your 8085 assembly language program.
+   - Type `reset` to go back to the menu.
 
 2. **Executing a Program:**
 
