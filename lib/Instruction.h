@@ -1092,57 +1092,197 @@ void DAA() {
 void CMP(string reg) {
     if (reg == "A") {
         processor.flag[6] = true;
+        processor.flag[0] = false;
+        processor.flag[7] = false;
+        processor.flag[2] = false;
+        processor.flag[4] = false;
     }
     if (reg == "B") {
-        if (processor.A == processor.B) processor.flag[6] = true;
-        else processor.flag[6] = false;
-        if (processor.A < processor.B) processor.flag[0] = true;
-        else processor.flag[0] = false;
+        if (processor.A == processor.B) {
+            processor.flag[6] = true;
+            processor.flag[0] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else if (processor.A < processor.B) {
+            processor.flag[0] = true;
+            processor.flag[6] = false;
+            processor.flag[7] = true;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else {
+            processor.flag[0] = false;
+            processor.flag[6] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
     }
     if (reg == "C") {
-        if (processor.A == processor.C) processor.flag[6] = true;
-        else processor.flag[6] = false;
-        if (processor.A < processor.C) processor.flag[0] = true;
-        else processor.flag[0] = false;
+        if (processor.A == processor.C) {
+            processor.flag[6] = true;
+            processor.flag[0] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else if (processor.A < processor.C) {
+            processor.flag[0] = true;
+            processor.flag[6] = false;
+            processor.flag[7] = true;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else {
+            processor.flag[0] = false;
+            processor.flag[6] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
     }
     if (reg == "D") {
-        if (processor.A == processor.D) processor.flag[6] = true;
-        else processor.flag[6] = false;
-        if (processor.A < processor.D) processor.flag[0] = true;
-        else processor.flag[0] = false;
+        if (processor.A == processor.D) {
+            processor.flag[6] = true;
+            processor.flag[0] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else if (processor.A < processor.D) {
+            processor.flag[0] = true;
+            processor.flag[6] = false;
+            processor.flag[7] = true;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else {
+            processor.flag[0] = false;
+            processor.flag[6] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
     }
     if (reg == "E") {
-        if (processor.A == processor.E) processor.flag[6] = true;
-        else processor.flag[6] = false;
-        if (processor.A < processor.E) processor.flag[0] = true;
-        else processor.flag[0] = false;
+        if (processor.A == processor.E) {
+            processor.flag[6] = true;
+            processor.flag[0] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else if (processor.A < processor.E) {
+            processor.flag[0] = true;
+            processor.flag[6] = false;
+            processor.flag[7] = true;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else {
+            processor.flag[0] = false;
+            processor.flag[6] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
     }
     if (reg == "H") {
-        if (processor.A == processor.H) processor.flag[6] = true;
-        else processor.flag[6] = false;
-        if (processor.A < processor.H) processor.flag[0] = true;
-        else processor.flag[0] = false;
+        if (processor.A == processor.H) {
+            processor.flag[6] = true;
+            processor.flag[0] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else if (processor.A < processor.H) {
+            processor.flag[0] = true;
+            processor.flag[6] = false;
+            processor.flag[7] = true;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else {
+            processor.flag[0] = false;
+            processor.flag[6] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
     }
     if (reg == "L") {
-        if (processor.A == processor.L) processor.flag[6] = true;
-        else processor.flag[6] = false;
-        if (processor.A < processor.L) processor.flag[0] = true;
-        else processor.flag[0] = false;
+        if (processor.A == processor.L) {
+            processor.flag[6] = true;
+            processor.flag[0] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else if (processor.A < processor.L) {
+            processor.flag[0] = true;
+            processor.flag[6] = false;
+            processor.flag[7] = true;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else {
+            processor.flag[0] = false;
+            processor.flag[6] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
     }
     if (reg == "M") {
         uint16_t address = (processor.H << 8) | processor.L;
-        if (processor.A == processor.memory.readVal(address)) processor.flag[6] = true;
-        else processor.flag[6] = false;
-        if (processor.A < processor.memory.readVal(address)) processor.flag[0] = true;
-        else processor.flag[0] = false;
+        if (processor.A == processor.memory.readVal(address)) {
+            processor.flag[6] = true;
+            processor.flag[0] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else if (processor.A < processor.memory.readVal(address)) {
+            processor.flag[0] = true;
+            processor.flag[6] = false;
+            processor.flag[7] = true;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else {
+            processor.flag[0] = false;
+            processor.flag[6] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
     }
 }
 
 void CPI(uint8_t val) {
-    if (processor.A == val) processor.flag[6] = true;
-    else processor.flag[6] = false;
-    if (processor.A < val) processor.flag[0] = true;
-    else processor.flag[0] = false;
+    if (processor.A == val) {
+            processor.flag[6] = true;
+            processor.flag[0] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else if (processor.A < val) {
+            processor.flag[0] = true;
+            processor.flag[6] = false;
+            processor.flag[7] = true;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
+        else {
+            processor.flag[0] = false;
+            processor.flag[6] = false;
+            processor.flag[7] = false;
+            processor.flag[2] = false;
+            processor.flag[4] = false;
+        }
 }
 
 void ANA(string reg) {
@@ -1317,7 +1457,13 @@ void execute() {
     while(true) {
         memIns = processor.memory.readIns((uint16_t)processor.PC);
         ins = makeIns(memIns);
+        // machine control
         if (ins.opcode == "HLT") break;
+        if (ins.opcode == "NOP") {
+            processor.PC += 1;
+            continue;
+        }
+        // data transfer
         if (ins.opcode == "MOV") {
             MOV(ins.operands[0], ins.operands[1]);
             processor.PC += 1;
@@ -1404,6 +1550,7 @@ void execute() {
             processor.PC += 1;
             continue;
         }
+        // branching
         if (ins.opcode == "JMP") {
             JMP((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
             continue;
@@ -1513,6 +1660,7 @@ void execute() {
             RPE((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
             continue;
         }
+        // arithmetic
         if (ins.opcode == "RPO") {
             RPO((processor.memory.readVal(processor.PC + 2) << 8) | processor.memory.readVal(processor.PC + 1));
             continue;
@@ -1582,6 +1730,7 @@ void execute() {
             processor.PC += 1;
             continue;
         }
+        // logical
         if (ins.opcode == "CMP") {
             CMP(ins.operands[0]);
             processor.PC += 1;
@@ -1654,10 +1803,6 @@ void execute() {
         }
         if (ins.opcode == "STC") {
             STC();
-            processor.PC += 1;
-            continue;
-        }
-        if (ins.opcode == "NOP") {
             processor.PC += 1;
             continue;
         }
